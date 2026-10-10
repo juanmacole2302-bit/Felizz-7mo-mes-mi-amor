@@ -1,0 +1,688 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carta Secreta 💙</title>
+
+<style>
+:root {
+    --blue: #9bc9f5;
+    --deep-blue: #356da8;
+    --light-blue: #eaf5ff;
+    --dark-blue: #23476b;
+    --paper: #fafdff;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow-x: hidden;
+    font-family: "Georgia", serif;
+    background: linear-gradient(
+        135deg,
+        #eaf5ff,
+        #c9e5ff,
+        #dceeff,
+        #f5faff
+    );
+    background-size: 300% 300%;
+    animation: backgroundGlow 12s ease infinite;
+    color: var(--dark-blue);
+}
+
+@keyframes backgroundGlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Corazones flotantes */
+
+.heart {
+    position: fixed;
+    bottom: -40px;
+    color: #70b7f5;
+    opacity: 0.7;
+    pointer-events: none;
+    animation: floatHeart linear forwards;
+    z-index: 0;
+}
+
+@keyframes floatHeart {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+    }
+    15% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(-110vh) rotate(35deg);
+        opacity: 0;
+    }
+}
+
+/* Pantalla de contraseña */
+
+.lock-card {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 370px;
+    padding: 32px 24px;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.9);
+    border-radius: 28px;
+    background: rgba(255,255,255,0.78);
+    box-shadow: 0 15px 45px rgba(53,109,168,0.16);
+    backdrop-filter: blur(12px);
+    animation: appear 0.8s ease;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.lock-icon {
+    width: 76px;
+    height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    border-radius: 50%;
+    background: #dceeff;
+    font-size: 36px;
+    box-shadow: 0 6px 18px rgba(53,109,168,0.12);
+}
+
+.lock-card h1 {
+    margin: 10px 0;
+    color: var(--deep-blue);
+    font-size: 27px;
+}
+
+.lock-card .subtitle {
+    margin: 0 0 22px;
+    color: #6384a6;
+    font-size: 14px;
+}
+
+.password-display {
+    min-height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 20px;
+}
+
+.dot {
+    width: 13px;
+    height: 13px;
+    border: 2px solid #9bc9f5;
+    border-radius: 50%;
+    transition: 0.2s;
+}
+
+.dot.filled {
+    background: var(--deep-blue);
+    border-color: var(--deep-blue);
+    transform: scale(1.12);
+}
+
+.keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.key {
+    min-height: 53px;
+    border: 1px solid #c8e1fa;
+    border-radius: 15px;
+    background: #fafdff;
+    color: var(--deep-blue);
+    font-size: 20px;
+    cursor: pointer;
+    transition: transform 0.15s, background 0.15s;
+}
+
+.key:hover {
+    background: #dceeff;
+}
+
+.key:active {
+    transform: scale(0.94);
+}
+
+.key.action {
+    background: #edf6ff;
+    font-size: 14px;
+}
+
+.error {
+    min-height: 20px;
+    margin: 15px 0 0;
+    color: #547fa9;
+    font-size: 13px;
+}
+
+/* Pantalla del sobre */
+
+.letter-screen {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    animation: appear 0.8s ease;
+}
+
+.intro {
+    margin-bottom: 28px;
+}
+
+.intro h1 {
+    color: var(--deep-blue);
+    font-size: clamp(25px, 6vw, 34px);
+    margin-bottom: 8px;
+}
+
+.intro p {
+    color: #6384a6;
+    font-style: italic;
+}
+
+.envelope-area {
+    perspective: 1000px;
+    width: min(310px, 85vw);
+    height: 210px;
+    margin: 0 auto;
+    cursor: pointer;
+}
+
+.envelope {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.8s ease;
+}
+
+.envelope.open {
+    transform: translateY(10px);
+}
+
+.envelope-back {
+    position: absolute;
+    inset: 0;
+    background: #b8dafa;
+    border-radius: 7px;
+    box-shadow: 0 15px 30px rgba(53,109,168,0.18);
+}
+
+.envelope-front {
+    position: absolute;
+    inset: 0;
+    background: #a9cef3;
+    clip-path: polygon(0 0, 50% 58%, 100% 0, 100% 100%, 0 100%);
+    border-radius: 7px;
+    z-index: 3;
+}
+
+.envelope-front::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: #c5e0fa;
+    clip-path: polygon(0 100%, 50% 48%, 100% 100%);
+}
+
+.envelope-flap {
+    position: absolute;
+    inset: 0;
+    background: #83b5e8;
+    clip-path: polygon(0 0, 100% 0, 50% 58%);
+    transform-origin: top;
+    transition: transform 0.7s ease;
+    z-index: 4;
+}
+
+.envelope.open .envelope-flap {
+    transform: rotateX(180deg);
+    z-index: 1;
+}
+
+.seal {
+    position: absolute;
+    top: 43%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 49px;
+    height: 49px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--deep-blue);
+    color: white;
+    font-size: 24px;
+    box-shadow: 0 4px 10px rgba(35,71,107,0.2);
+    z-index: 5;
+    transition: opacity 0.3s;
+}
+
+.envelope.open .seal {
+    opacity: 0;
+}
+
+.tap-hint {
+    margin-top: 24px;
+    color: #6384a6;
+    font-size: 14px;
+    animation: pulse 1.7s infinite;
+}
+
+@keyframes pulse {
+    50% { opacity: 0.55; }
+}
+
+/* Carta */
+
+.letter-paper {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    animation: letterAppear 1s ease;
+}
+
+@keyframes letterAppear {
+    from {
+        opacity: 0;
+        transform: translateY(25px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.notepad {
+    position: relative;
+    overflow: hidden;
+    padding: 34px 25px 28px;
+    border: 1px solid #cfe4f8;
+    border-radius: 12px;
+    background-color: var(--paper);
+    background-image: repeating-linear-gradient(
+        transparent,
+        transparent 31px,
+        rgba(112,167,218,0.16) 32px
+    );
+    box-shadow: 0 18px 45px rgba(53,109,168,0.15);
+    text-align: left;
+}
+
+.notepad::before {
+    content: "♥";
+    position: absolute;
+    top: 10px;
+    right: 17px;
+    color: #659fd8;
+    font-size: 22px;
+    opacity: 0.8;
+}
+
+.date {
+    margin-bottom: 22px;
+    color: #638bb4;
+    font-size: 13px;
+    text-align: right;
+    font-style: italic;
+}
+
+.notepad h2 {
+    margin: 0 0 24px;
+    color: var(--deep-blue);
+    font-size: clamp(23px, 5vw, 29px);
+    text-align: center;
+}
+
+.notepad p {
+    color: #3c5874;
+    font-size: 16px;
+    line-height: 1.9;
+    margin: 0 0 19px;
+    overflow-wrap: anywhere;
+}
+
+.signature {
+    margin-top: 28px !important;
+    color: var(--deep-blue) !important;
+    text-align: right;
+    font-size: 19px !important;
+    font-style: italic;
+}
+
+.back-button {
+    display: block;
+    margin: 22px auto 0;
+    padding: 11px 20px;
+    border: 1px solid #b8d5f2;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.8);
+    color: var(--deep-blue);
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.back-button:hover {
+    background: #dceeff;
+    transform: translateY(-2px);
+}
+
+.footer {
+    margin-top: 22px;
+    color: #7294b6;
+    font-size: 12px;
+}
+
+@media (max-width: 420px) {
+    body {
+        padding: 14px;
+    }
+
+    .lock-card {
+        padding: 27px 18px;
+    }
+
+    .notepad {
+        padding: 32px 19px 25px;
+    }
+
+    .notepad p {
+        font-size: 15px;
+        line-height: 1.8;
+    }
+
+    .envelope-area {
+        height: 185px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Pantalla de contraseña -->
+<main class="lock-card" id="lockScreen">
+    <div class="lock-icon">🔐</div>
+
+    <h1>Carta Secreta</h1>
+    <p class="subtitle">Tengo algo muy especial para ti 💙</p>
+
+    <div class="password-display" id="passwordDisplay">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+
+    <div class="keypad">
+        <button class="key" data-number="1">1</button>
+        <button class="key" data-number="2">2</button>
+        <button class="key" data-number="3">3</button>
+        <button class="key" data-number="4">4</button>
+        <button class="key" data-number="5">5</button>
+        <button class="key" data-number="6">6</button>
+        <button class="key" data-number="7">7</button>
+        <button class="key" data-number="8">8</button>
+        <button class="key" data-number="9">9</button>
+        <button class="key action" id="clearButton">Borrar</button>
+        <button class="key" data-number="0">0</button>
+        <button class="key action" id="deleteButton">⌫</button>
+    </div>
+
+    <p class="error" id="errorMessage" aria-live="polite">
+        Ingresa la contraseña para descubrir tu carta.
+    </p>
+</main>
+
+<!-- Pantalla del sobre -->
+<section class="letter-screen hidden" id="envelopeScreen">
+    <div class="intro">
+        <h1>Para alguien especial 💙</h1>
+        <p>Hay algo que quiero decirte...</p>
+    </div>
+
+    <div class="envelope-area" id="envelopeArea"
+         role="button" tabindex="0"
+         aria-label="Abrir la carta">
+        <div class="envelope" id="envelope">
+            <div class="envelope-back"></div>
+            <div class="envelope-flap"></div>
+            <div class="envelope-front"></div>
+            <div class="seal">♥</div>
+        </div>
+    </div>
+
+    <p class="tap-hint">Toca el sobre para abrir tu carta ✨</p>
+    <p class="footer">Hecha con mucho amor ♡</p>
+</section>
+
+<!-- Carta romántica -->
+<section class="letter-paper hidden" id="letterScreen">
+    <article class="notepad">
+        <div class="date">11 Octubre 2026</div>
+
+        <h2>💌 Mi Pequeña Tobejita</h2>
+
+        <p>
+            Quiero que sepas lo feliz que soy por tenerte en tu vida.
+            Desde que llegaste, todo cambió para mejor. Me haces sentir
+            amada, cuidada y acompañada de una forma que nunca antes
+            había sentido.
+        </p>
+
+        <p>
+            A tu lado aprendí lo que es el amor verdadero, ese que se
+            demuestra con acciones, con palabras sinceras y con esos
+            pequeños detalles que hacen la diferencia. Gracias por estar
+            siempre conmigo, por darme tu tiempo, tu cariño y tu comprensión.
+        </p>
+
+        <p>
+            No sé cómo explicarlo, pero contigo mi corazón está en paz.
+            Eres mi alegría diaria y la razón de tantas sonrisas.
+        </p>
+
+        <p class="signature">Te amo muchísimo, mi amor. ♡</p>
+    </article>
+
+    <button class="back-button" id="backButton">
+        Volver al sobre 💌
+    </button>
+
+    <p class="footer">Con todo mi amor, para ti 💙</p>
+</section>
+
+<script>
+const PASSWORD = "1110";
+
+let enteredPassword = "";
+let isOpening = false;
+
+const lockScreen = document.getElementById("lockScreen");
+const envelopeScreen = document.getElementById("envelopeScreen");
+const letterScreen = document.getElementById("letterScreen");
+const passwordDisplay = document.getElementById("passwordDisplay");
+const errorMessage = document.getElementById("errorMessage");
+const envelope = document.getElementById("envelope");
+const envelopeArea = document.getElementById("envelopeArea");
+
+function updateDots() {
+    const dots = passwordDisplay.querySelectorAll(".dot");
+
+    dots.forEach((dot, index) => {
+        dot.classList.toggle("filled", index < enteredPassword.length);
+    });
+}
+
+function addNumber(number) {
+    if (enteredPassword.length >= 4) return;
+
+    enteredPassword += number;
+    updateDots();
+
+    errorMessage.textContent = " ";
+
+    if (enteredPassword.length === 4) {
+        setTimeout(checkPassword, 180);
+    }
+}
+
+function checkPassword() {
+    if (enteredPassword === PASSWORD) {
+        lockScreen.classList.add("hidden");
+        envelopeScreen.classList.remove("hidden");
+        createHearts();
+    } else {
+        errorMessage.textContent = "Esa no es la contraseña. Inténtalo de nuevo 💙";
+
+        const card = document.querySelector(".lock-card");
+        card.animate(
+            [
+                { transform: "translateX(0)" },
+                { transform: "translateX(-7px)" },
+                { transform: "translateX(7px)" },
+                { transform: "translateX(0)" }
+            ],
+            { duration: 250 }
+        );
+
+        enteredPassword = "";
+        updateDots();
+    }
+}
+
+function deleteNumber() {
+    enteredPassword = enteredPassword.slice(0, -1);
+    updateDots();
+    errorMessage.textContent = " ";
+}
+
+function clearPassword() {
+    enteredPassword = "";
+    updateDots();
+    errorMessage.textContent = "Ingresa la contraseña para descubrir tu carta.";
+}
+
+document.querySelectorAll("[data-number]").forEach(button => {
+    button.addEventListener("click", () => {
+        addNumber(button.dataset.number);
+    });
+});
+
+document.getElementById("deleteButton").addEventListener("click", deleteNumber);
+document.getElementById("clearButton").addEventListener("click", clearPassword);
+
+document.addEventListener("keydown", event => {
+    if (lockScreen.classList.contains("hidden")) return;
+
+    if (/^[0-9]$/.test(event.key)) {
+        addNumber(event.key);
+    } else if (event.key === "Backspace") {
+        deleteNumber();
+    } else if (event.key === "Escape") {
+        clearPassword();
+    }
+});
+
+function openEnvelope() {
+    if (isOpening) return;
+    isOpening = true;
+
+    envelope.classList.add("open");
+
+    setTimeout(() => {
+        envelopeScreen.classList.add("hidden");
+        letterScreen.classList.remove("hidden");
+        isOpening = false;
+        createHearts();
+    }, 850);
+}
+
+envelopeArea.addEventListener("click", openEnvelope);
+
+envelopeArea.addEventListener("keydown", event => {
+    if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openEnvelope();
+    }
+});
+
+document.getElementById("backButton").addEventListener("click", () => {
+    letterScreen.classList.add("hidden");
+    envelopeScreen.classList.remove("hidden");
+    envelope.classList.remove("open");
+});
+
+function createHearts() {
+    for (let i = 0; i < 12; i++) {
+        setTimeout(createHeart, i * 180);
+    }
+}
+
+function createHeart() {
+    const heart = document.createElement("span");
+
+    heart.className = "heart";
+    heart.textContent = ["♥", "♡", "💙"][Math.floor(Math.random() * 3)];
+
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = (15 + Math.random() * 22) + "px";
+    heart.style.animationDuration = (5 + Math.random() * 5) + "s";
+
+    document.body.appendChild(heart);
+
+    heart.addEventListener("animationend", () => heart.remove());
+}
+
+setInterval(() => {
+    if (!document.hidden) createHeart();
+}, 1400);
+</script>
+
+</body>
+</html>
